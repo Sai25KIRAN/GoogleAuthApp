@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
   }
 
   sendTokenToBackend(token: string) {
-    this.http.post('https://localhost:64475/api/auth/google-login', { idToken: token })
+    this.http.post(`${environment.apiUrl}/api/auth/google-login`, { idToken: token })
       .subscribe({
         next: (res: any) => {
           console.log('Backend authentication successful!', res);
