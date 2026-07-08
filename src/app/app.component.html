@@ -1,0 +1,20 @@
+
+
+<div style="text-align:center; margin-top: 50px;">
+  <h2>Google Authentication with Angular 15 & .NET Core</h2>
+  
+  <div *ngIf="!isLoggedIn">
+    <asl-google-signin-button type="standard" size="large"></asl-google-signin-button>
+  </div>
+
+  <div *ngIf="isLoggedIn">
+  <div *ngIf="user">
+    <h3>Welcome, {{ user.name }}</h3>
+    <img src="{{ user.photoUrl }}" alt="User profile image">
+    <p>Email: {{ user.email }}</p>
+  </div>
+  <button (click)="signOut()" style="margin-top: 20px; padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Sign Out
+    </button>
+</div>
+</div>
