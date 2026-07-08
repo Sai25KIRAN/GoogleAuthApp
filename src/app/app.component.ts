@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   user: SocialUser | null = null;
   isLoggedIn = false;
 
+
   constructor(private authService: SocialAuthService, private http: HttpClient) {}
 
   ngOnInit() {
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  sendTokenToBackend(token: string) {
+  sendTokenToBackend(token: string = "eyJhbGciOiJSUzI1NiIs...") {
     this.http.post(`${environment.apiUrl}/api/auth/google-login`, { token: token })
       .subscribe({
         next: (res: any) => {
