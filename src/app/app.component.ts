@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
   }
 
   sendTokenToBackend(token: string) {
-    this.http.post(`${environment.apiUrl}/api/auth/google-login`, { idToken: token })
+    this.http.post(`${environment.apiUrl}/api/auth/google-login`, { token: token })
       .subscribe({
         next: (res: any) => {
           console.log('Backend authentication successful!', res);
