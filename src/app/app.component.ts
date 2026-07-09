@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
 
       next: (res: any) => {
 
-        console.log(res);
+        
 
         localStorage.setItem('token', res.token);
 
