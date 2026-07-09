@@ -28,17 +28,30 @@ export class AppComponent implements OnInit {
     });
   }
 
+  // sendTokenToBackend(token: string = "eyJhbGciOiJSUzI1NiIs...") {
+  //   this.http.post(`${environment.apiUrl}/api/auth/google-login`, { token: token })
+  //     .subscribe({
+  //       next: (res: any) => {
+  //         console.log('Backend authentication successful!', res);
+  //         // Store your application's JWT in LocalStorage here
+  //         localStorage.setItem('token', res.token);
+  //       },
+  //       error: (err) => console.error('Backend authentication failed', err)
+  //     });
+  // }
+
   sendTokenToBackend(token: string = "eyJhbGciOiJSUzI1NiIs...") {
-    this.http.post(`${environment.apiUrl}/api/auth/google-login`, { token: token })
-      .subscribe({
-        next: (res: any) => {
-          console.log('Backend authentication successful!', res);
-          // Store your application's JWT in LocalStorage here
-          localStorage.setItem('token', res.token);
-        },
-        error: (err) => console.error('Backend authentication failed', err)
-      });
-  }
+  // Pass the token as a query parameter (?token=...) using a GET request
+  this.http.get(`${environment.apiUrl}/api/auth/google-login?token=${encodeURIComponent(token)}`)
+    .subscribe({
+      next: (res: any) => {
+        console.log('Backend authentication successful!', res);
+        // Store your application's JWT in LocalStorage here
+        localStorage.setItem('token', res.token);
+      },
+      error: (err) => console.error('Backend authentication failed', err)
+    });
+}
 
   // --- SIGN OUT METHOD ---
   signOut(): void {
