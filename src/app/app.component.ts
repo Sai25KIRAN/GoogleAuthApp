@@ -9,62 +9,67 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'my-social-login-app';
+
   user: SocialUser | null = null;
   isLoggedIn = false;
 
+  constructor(
+    private authService: SocialAuthService,
+    private http: HttpClient
+  ) { }
 
-  constructor(private authService: SocialAuthService, private http: HttpClient) {}
+  ngOnInit(): void {
 
-  ngOnInit() {
     this.authService.authState.subscribe((user) => {
+
       this.user = user;
-      this.isLoggedIn = (user != null || localStorage.getItem('token') != null);
-      
-      if (user && !localStorage.getItem('token')) {
-        // Send idToken to the .NET Core Backend API
+      this.isLoggedIn = !!user;
+
+      if (user?.idToken) {
         this.sendTokenToBackend(user.idToken);
       }
+
     });
+
   }
 
-  // sendTokenToBackend(token: string = "eyJhbGciOiJSUzI1NiIs...") {
-  //   this.http.post(`${environment.apiUrl}/api/auth/google-login`, { token: token })
-  //     .subscribe({
-  //       next: (res: any) => {
-  //         console.log('Backend authentication successful!', res);
-  //         // Store your application's JWT in LocalStorage here
-  //         localStorage.setItem('token', res.token);
-  //       },
-  //       error: (err) => console.error('Backend authentication failed', err)
-  //     });
-  // }
+  sendTokenToBackend(idToken: string): void {
 
-  sendTokenToBackend(token: string = this.user?.idToken || '') {
-  // Pass the token as a query parameter (?token=...) using a GET request
-  this.http.get(`${environment.apiUrl}/api/auth/google-login?token=${encodeURIComponent(token)}`)
-    .subscribe({
+    this.http.post(
+      `${environment.apiUrl}/api/auth/google-login`,
+      {
+        idToken: idToken
+      }
+    ).subscribe({
+
       next: (res: any) => {
-        console.log('Backend authentication successful!', res);
-        // Store your application's JWT in LocalStorage here
-        localStorage.setItem('token', res.token);
-      },
-      error: (err) => console.error('Backend authentication failed', err)
-    });
-}
 
-  // --- SIGN OUT METHOD ---
-  signOut(): void {
-    this.authService.signOut().then(() => {
-      localStorage.removeItem('token'); // Clear your application's JWT
-      this.user = null;
-      this.isLoggedIn = false;
-      console.log('User signed out successfully.');
-    }).catch(err => {
-      // Fallback if no active Google session exists globally
-      localStorage.removeItem('token');
-      this.user = null;
-      this.isLoggedIn = false;
+        console.log(res);
+
+        localStorage.setItem('token', res.token);
+
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+      }
+
     });
+
   }
+
+  signOut() {
+
+    this.authService.signOut();
+
+    localStorage.removeItem('token');
+
+    this.user = null;
+
+    this.isLoggedIn = false;
+
+  }
+
 }
