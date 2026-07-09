@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
   //     });
   // }
 
-  sendTokenToBackend(token: string = "eyJhbGciOiJSUzI1NiIs...") {
+  sendTokenToBackend(token: string = this.user?.idToken || '') {
   // Pass the token as a query parameter (?token=...) using a GET request
   this.http.get(`${environment.apiUrl}/api/auth/google-login?token=${encodeURIComponent(token)}`)
     .subscribe({
